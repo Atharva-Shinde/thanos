@@ -36,7 +36,7 @@ type Resolver interface {
 
 type ipLookupResolver interface {
 	LookupIPAddr(ctx context.Context, host string) ([]net.IPAddr, error)
-	LookupSRV(ctx context.Context, service, proto, name string) (cname string, addrs []*net.SRV, err error)
+	LookupSRV(ctx context.Context, service, proto, name string) (addrs []*net.SRV, err error)
 	IsNotFound(err error) bool
 }
 
@@ -90,7 +90,7 @@ func (s *dnsSD) Resolve(ctx context.Context, name string, qtype QType) ([]string
 			res = append(res, appendScheme(scheme, net.JoinHostPort(ip.String(), port)))
 		}
 	case SRV, SRVNoA:
-		_, recs, err := s.resolver.LookupSRV(ctx, "", "", host)
+		recs, err := s.resolver.LookupSRV(ctx, "", "", host)
 		if err != nil {
 			if !s.resolver.IsNotFound(err) {
 				return nil, errors.Wrapf(err, "lookup SRV records %q", host)
