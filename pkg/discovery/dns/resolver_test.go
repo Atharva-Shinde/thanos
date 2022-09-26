@@ -29,11 +29,11 @@ func (m mockHostnameResolver) LookupIPAddr(ctx context.Context, host string) ([]
 	return m.resultIPs[host], nil
 }
 
-func (m mockHostnameResolver) LookupSRV(ctx context.Context, service, proto, name string) (cname string, addrs []*net.SRV, err error) {
+func (m mockHostnameResolver) LookupSRV(ctx context.Context, service, proto, name string) (addrs []*net.SRV, err error) {
 	if m.err != nil {
-		return "", nil, m.err
+		return nil, m.err
 	}
-	return "", m.resultSRVs[name], nil
+	return m.resultSRVs[name], nil
 }
 
 func (m mockHostnameResolver) IsNotFound(err error) bool {
